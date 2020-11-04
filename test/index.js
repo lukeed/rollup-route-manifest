@@ -15,7 +15,7 @@ function bundle(options) {
 	return { emits, assets };
 }
 
-function merge(files, headers) {
+function combine(files, headers) {
 	let k, output = {};
 	for (k in files) {
 		output[k] = { files: files[k] };
@@ -237,7 +237,7 @@ headers('should create `Link` headers when `true` value', () => {
 	assert.instance(example.headers, Array);
 	assert.instance(example.files, Array);
 
-	const expects = merge(EXPECT.FILES, EXPECT.HEADERS);
+	const expects = combine(EXPECT.FILES, EXPECT.HEADERS);
 	assert.equal(contents, expects);
 });
 
@@ -511,4 +511,61 @@ inline('should only avoid "rmanifest.json" via falsey `filename` option', () => 
 
 inline.run();
 
-// TODO: merge
+// ---
+
+const merge = suite('options.merge');
+
+merge('should combine route contents with "*" contents', () => {
+	const { emits } = bundle({
+		merge: true,
+		routes: DEFAULTS.routes,
+	});
+
+	const contents = parse(emits);
+	const routes = Object.keys(contents);
+	assert.not.ok(routes.includes('*'), '~> removed "*" key');
+	assert.equal(routes, ['/error', '/', '/search', '/:slug']);
+
+	assert.instance(contents['/'], Array);
+
+	function squash(key) {
+		let i=0, arr=EXPECT.FILES[key].slice();
+		let owned = new Set(arr.map(x => x.href));
+		let shared = EXPECT.FILES['*'].slice();
+		for (; i < shared.length; i++) {
+			if (owned.has(shared[i].href)) continue;
+			owned.add(shared[i].href);
+			arr.push(shared[i]);
+		}
+		return arr;
+	}
+
+	assert.equal(contents['/'], squash('/'));
+	assert.equal(contents['/search'], squash('/search'));
+	assert.equal(contents['/:slug'], squash('/:slug'));
+});
+
+merge('should combine route contents with "*" contents :: headers', () => {
+	const { emits } = bundle({
+		merge: true,
+		headers: true,
+		routes: DEFAULTS.routes,
+	});
+
+	const contents = parse(emits);
+	const routes = Object.keys(contents);
+	assert.not.ok(routes.includes('*'), '~> removed "*" key');
+	assert.equal(routes, ['/error', '/', '/search', '/:slug']);
+
+	const commons = new Set(EXPECT.FILES['*'].map(x => x.href));
+
+	for (let key in contents) {
+		contents[key].headers.forEach(obj => {
+			for (let asset of commons) {
+				assert.match(obj.value, '<' + asset);
+			}
+		});
+	}
+});
+
+merge.run();
