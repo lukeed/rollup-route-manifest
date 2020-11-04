@@ -7,11 +7,12 @@ import BUNDLE from './fixtures/bundle.json';
 import * as EXPECT from './fixtures/expects';
 
 function bundle(options) {
-	const files = [];
+	const emits = [];
+	const assets = klona(BUNDLE);
 	plugin(options).generateBundle.apply({
-		emitFile: obj => files.push(obj)
-	}, [null, klona(BUNDLE)]);
-	return files;
+		emitFile: obj => emits.push(obj)
+	}, [null, assets]);
+	return { emits, assets };
 }
 
 function merge(files, headers) {
@@ -64,35 +65,35 @@ API.run();
 const filename = suite('options.filename');
 
 filename('should be "rmanifest.json" by default', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: () => false,
 	});
 
-	assert.is(output.length, 1, '~> emits 1 file');
+	assert.is(emits.length, 1, '~> emits 1 file');
 
-	const [rmanifest] = output;
+	const [rmanifest] = emits;
 	assert.is(rmanifest.fileName, 'rmanifest.json');
 });
 
 filename('should be customizable', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: () => false,
 		filename: 'hello.json',
 	});
 
-	assert.is(output.length, 1, '~> emits 1 file');
+	assert.is(emits.length, 1, '~> emits 1 file');
 
-	const [rmanifest] = output;
+	const [rmanifest] = emits;
 	assert.is(rmanifest.fileName, 'hello.json');
 });
 
 filename('should not emit a file if falsey', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: () => false,
 		filename: '',
 	});
 
-	assert.is(output.length, 0, '~> emits 0 files');
+	assert.is(emits.length, 0, '~> emits 0 files');
 });
 
 filename.run();
@@ -102,23 +103,23 @@ filename.run();
 const minify = suite('options.minify');
 
 minify('should not be minified by default', () => {
-	const [rmanifest] = bundle({
+	const { emits } = bundle({
 		routes: () => '/'
 	});
 
 	assert.ok(
-		rmanifest.source.startsWith('{\n  '),
+		emits[0].source.startsWith('{\n  '),
 	);
 });
 
 minify('should minify if `minify: true` specified', () => {
-	const [rmanifest] = bundle({
+	const { emits } = bundle({
 		routes: () => '/',
 		minify: true,
 	});
 
 	assert.not.ok(
-		rmanifest.source.startsWith('{\n  '),
+		emits[0].source.startsWith('{\n  '),
 	);
 });
 
@@ -157,13 +158,13 @@ routes('should accept `routes` function', () => {
 });
 
 routes('should return `false` to ignore route (function)', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes(file) {
 			return !file.includes('error.js') && DEFAULTS.routes(file);
 		}
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.is(routes.includes('/error'), false, '~> omits "/error" route');
 	assert.equal(routes, ['/', '/search', '/:slug', '*']);
@@ -175,7 +176,7 @@ routes('should return `false` to ignore route (function)', () => {
 });
 
 routes('should return `false` to ignore route (object)', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: {
 			// note: would be absolute
 			'src/index.js': '*',
@@ -186,7 +187,7 @@ routes('should return `false` to ignore route (object)', () => {
 		}
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.is(routes.includes('/error'), false, '~> omits "/error" route');
 	assert.equal(routes, ['/', '/search', '/:slug', '*']);
@@ -198,12 +199,12 @@ routes('should return `false` to ignore route (object)', () => {
 });
 
 routes('should skip sorting when `sort: false`', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: DEFAULTS.routes,
 		sort: false,
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['*', '/error', '/', '/search', '/:slug']);
 
@@ -222,12 +223,12 @@ routes.run();
 const headers = suite('options.headers');
 
 headers('should create `Link` headers when `true` value', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		headers: true,
 		routes: DEFAULTS.routes,
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/error', '/', '/search', '/:slug', '*']);
 
@@ -241,14 +242,14 @@ headers('should create `Link` headers when `true` value', () => {
 });
 
 headers('should accept custom function', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: DEFAULTS.routes,
 		headers(assets, pattern, filemap) {
 			return filemap['*'].concat(assets);
 		}
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/error', '/', '/search', '/:slug', '*']);
 
@@ -303,7 +304,7 @@ headers.run();
 const assets = suite('options.assets');
 
 assets('should accept function to customize preload types', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: DEFAULTS.routes,
 		headers: true,
 		assets(str) {
@@ -314,7 +315,7 @@ assets('should accept function to customize preload types', () => {
 		}
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/error', '/', '/search', '/:slug', '*']);
 
@@ -339,12 +340,12 @@ assets.run();
 const publicPath = suite('options.publicPath');
 
 publicPath('should be "/" by default', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: () => '/search',
 		headers: true,
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/search']);
 
@@ -363,13 +364,13 @@ publicPath('should be "/" by default', () => {
 });
 
 publicPath('should be configurable', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		routes: () => '/search',
 		publicPath: '/assets/',
 		headers: true,
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/search']);
 
@@ -394,12 +395,12 @@ publicPath.run();
 const format = suite('format');
 
 format('should customize `Asset` data before write', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		format: files => files.map(x => x.href),
 		routes: x => x.includes('/search') && '/search',
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/search']);
 
@@ -412,13 +413,13 @@ format('should customize `Asset` data before write', () => {
 });
 
 format('may produce broken "headers" with `headers: true` option', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		headers: true,
 		format: files => files.map(x => x.href),
 		routes: x => x.includes('/search') && '/search',
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/search']);
 
@@ -438,13 +439,13 @@ format('may produce broken "headers" with `headers: true` option', () => {
 });
 
 format('passes modified `Asset[]` list to `headers` function', () => {
-	const output = bundle({
+	const { emits } = bundle({
 		format: files => files.map(x => x.href),
 		routes: x => x.includes('/search') && '/search',
 		headers: assets => assets
 	});
 
-	const contents = parse(output);
+	const contents = parse(emits);
 	const routes = Object.keys(contents);
 	assert.equal(routes, ['/search']);
 
