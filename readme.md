@@ -13,9 +13,9 @@ While amazing, this isn't (yet) a perfect solution. The client will need to navi
 Let's assume the client checks out the `/blog` page. <br>
 In most configurations, the blog's assets only start downloading **after** the click has been made. Typically, the main "entrypoint" for `/blog` will load, but _only then_ will the additional assets it requires be requested. This cascade of "oh yeah, we need that too" can easily get out of hand.
 
-What this means is that – despite our super speedy, well-optimized application – the client is still waiting for assets. Our application is at the mercy of the client's network connection.
+What this means is that despite our super speedy, well-optimized application, the client is still waiting for assets. Our application is at the mercy of the client's network connection.
 
-Until `/blog`'s code has loaded, our client may be staring at a loading screen/spinner, or – worse – a split-second flash of the loader.
+Until all the assets for `/blog` have loaded, our client may be staring at a loading screen/spinner, or – worse – a split-second flash of the loader.
 
 ***The Solution***
 
@@ -23,7 +23,7 @@ With this plugin, you regain control of your application's assets and how they'r
 
 You are given the knowledge of exactly which files are _going to be requested_ for each route of your application.
 
-In turn, this means you can preemptively load _all_ the assets for `/blog` _before_ the client clicks – or begin prefetching _everything_ `/blog` needs immediately after the click – skipping the "oh yeah"-cascade and the wait time(s).
+In turn, this means you can preemptively load _all_ the assets for `/blog` _before_ the client clicks – or begin prefetching _everything_ `/blog` needs immediately after the click – skipping the "oh yeah"-cascade and decreasing wait time(s).
 
 ***Further Reading***
 
@@ -110,9 +110,7 @@ Customize the `type` or `as` value of an asset by looking at its filename.
 
 > **Important:** You may also return a falsey value to exclude the asset from the manifest.
 
-The `assets` option receives the fully formed, public-facing URL of the file (aka, including [`output.publicPath`](https://webpack.js.org/configuration/output/#outputpublicpath)).
-
-Your function or object must return a valid [resource "destination"](https://fetch.spec.whatwg.org/#concept-request-destination) value.
+The `assets` option receives the assets' filenames, which are used to return a valid [resource "destination"](https://fetch.spec.whatwg.org/#concept-request-destination) value. You may also return a falsey value which will _not include_ the asset inside the manifest.
 
 Below is the default `assets` parser:
 
