@@ -1,4 +1,4 @@
-# rollup-route-manifest [![CI](https://github.com/lukeed/rollup-route-manifest/workflows/CI/badge.svg)](https://github.com/lukeed/rollup-route-manifest/actions)
+# rollup-route-manifest [![CI](https://github.com/lukeed/rollup-route-manifest/workflows/CI/badge.svg)](https://github.com/lukeed/rollup-route-manifest/actions) [![codecov](https://badgen.net/codecov/c/github/lukeed/rollup-route-manifest)](https://codecov.io/gh/lukeed/rollup-route-manifest)
 
 > A Rollup plugin to generate an asset manifest, keyed by route patterns!
 
