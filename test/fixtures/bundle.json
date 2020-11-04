@@ -8,6 +8,11 @@
       "index.4f1c8549.css"
     ]
   },
+  "ignore.css": {
+    "facadeModuleId": "src/ignore.css",
+    "referencedFiles": [],
+    "imports": []
+  },
   "index.f6c1450e.js": {
     "facadeModuleId": "src/routes/error.js",
     "imports": [
