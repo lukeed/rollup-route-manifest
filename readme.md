@@ -53,11 +53,15 @@ export default {
       merge: true,
       minify: true,
       routes(file) {
-        // Assume all entries are '/path/to/pages/Home' format
-        let out = file.replace('/path/to/pages', '').toLowerCase();
-        if (out === '/article') return '/blog/:title';
-        if (out === '/home') return '/';
-        return out;
+        // Assume all "routes" in "/path/to/src/pages/" directory
+        file = file.replace('/path/to/src', '').replace(/\.[tj]sx?$/, '');
+        if (!file.includes('/pages/') return '*'; // commons
+
+        let name = '/' + file.replace('/pages/', '');
+        if (name === '/error') return false; // ignore
+
+        if (name === '/article') return '/blog/:title';
+        return name === '/home' ? '/' : name;
       }
     })
   ]
@@ -80,7 +84,7 @@ When `routes` is a function, it receives absolute paths (`string`) and expects a
 route(file) {
   if (file.includes('/error.js')) return false; // skip
   if (!file.includes('/routes/')) return '*'; // commons chunk
-  let name = file.replace('/path/to/routes/', '').replace(/\.[tcm]jsx?$/, '');
+  let name = file.replace('/path/to/routes/', '').replace(/\.[tj]sx?$/, '');
   if (name === 'article') return '/blog/:slug';
   return name === 'home' ? '/' : name;
 }
