@@ -1,7 +1,4 @@
 declare module 'rollup-route-manifest' {
-	const { routes, assets, headers, format, minify, merge, inline } = opts;
-	const { filename='rmanifest.json', sort=true, publicPath='/' } = opts;
-
 	type Pattern = string;
 	type Dict<T> = Record<string, T>;
 	type Filter<T> = T | false | void | null;
