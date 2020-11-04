@@ -1,6 +1,6 @@
 # rollup-route-manifest [![CI](https://github.com/lukeed/rollup-route-manifest/workflows/CI/badge.svg)](https://github.com/lukeed/rollup-route-manifest/actions)
 
-> Generate an asset manifest file, keyed by route patterns!
+> A Rollup plugin to generate an asset manifest, keyed by route patterns!
 
 ***The Context***
 
