@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "1.0.0",
   "name": "rollup-route-manifest",
   "description": "A Rollup plugin to generate an asset manifest, keyed by route patterns!",
   "repository": "lukeed/rollup-route-manifest",
