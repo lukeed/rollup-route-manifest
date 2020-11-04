@@ -1,0 +1,119 @@
+{
+  "index.1c5aebde.js": {
+    "facadeModuleId": "src/index.js",
+    "imports": [],
+    "referencedFiles": [
+      "index.4f1c8549.css"
+    ]
+  },
+  "index.f6c1450e.js": {
+    "facadeModuleId": "src/routes/error.js",
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js"
+    ],
+    "referencedFiles": [
+      "r.error.08ca7a60.css"
+    ]
+  },
+  "index.daf64d39.js": {
+    "facadeModuleId": null,
+    "imports": [
+      "index.1c5aebde.js"
+    ],
+    "referencedFiles": [
+      "index.4f1c8549.css",
+      "index.4f1c8549.css",
+      "index.4f1c8549.css",
+      "index.4f1c8549.css",
+      "index.4f1c8549.css",
+      "socials.b4a6ba11.svg",
+      "index.4f1c8549.css",
+      "index.4f1c8549.css"
+    ]
+  },
+  "index.b0b86791.js": {
+    "facadeModuleId": "src/routes/home.js",
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js",
+      "format.ed6aedc1.js",
+      "form.64be9112.js"
+    ],
+    "referencedFiles": [
+      "r.home.2d12cbd5.css"
+    ]
+  },
+  "form.64be9112.js": {
+    "facadeModuleId": null,
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js",
+      "format.ed6aedc1.js"
+    ],
+    "referencedFiles": [
+      "index.4f1c8549.css",
+      "index.4f1c8549.css",
+      "index.4f1c8549.css"
+    ]
+  },
+  "format.ed6aedc1.js": {
+    "facadeModuleId": null,
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js"
+    ],
+    "referencedFiles": [
+      "index.4f1c8549.css"
+    ]
+  },
+  "index.97759469.js": {
+    "facadeModuleId": "src/routes/search.js",
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js",
+      "format.ed6aedc1.js",
+      "form.64be9112.js",
+      "index.4d89a60f.js",
+      "icons.ebab2333.js"
+    ],
+    "referencedFiles": [
+      "r.search.6cdea0b8.css",
+      "r.search.6cdea0b8.css",
+      "r.search.6cdea0b8.css",
+      "r.search.6cdea0b8.css"
+    ]
+  },
+  "icons.ebab2333.js": {
+    "facadeModuleId": null,
+    "imports": [],
+    "referencedFiles": [
+      "icons.b1c6b380.svg"
+    ]
+  },
+  "index.4d89a60f.js": {
+    "facadeModuleId": null,
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js"
+    ],
+    "referencedFiles": [
+      "index.4f1c8549.css"
+    ]
+  },
+  "index.5c6634f2.js": {
+    "facadeModuleId": "src/routes/article.js",
+    "imports": [
+      "index.1c5aebde.js",
+      "index.daf64d39.js",
+      "format.ed6aedc1.js",
+      "index.4d89a60f.js",
+      "icons.ebab2333.js"
+    ],
+    "referencedFiles": [
+      "r.job.6b12277a.css",
+      "index.4f1c8549.css",
+      "r.job.6b12277a.css"
+    ]
+  }
+}
