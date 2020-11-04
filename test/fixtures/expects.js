@@ -3,7 +3,9 @@ export const FILES = {
     { type: 'script', href: '/index.f6c1450e.js' },
     { type: 'script', href: '/index.1c5aebde.js' },
     { type: 'script', href: '/index.daf64d39.js' },
-    { type: 'style', href: '/r.error.08ca7a60.css' }
+    { type: 'style', href: '/r.error.08ca7a60.css' },
+    { type: 'font', href: '/font.woff2' },
+    { type: 'image', href: '/hero.jpg' },
   ],
   '/': [
     { type: 'script', href: '/index.b0b86791.js' },
@@ -43,7 +45,7 @@ export const HEADERS = {
 	"/error": [
 		{
 			"key": "Link",
-			"value": "</index.f6c1450e.js>; rel=preload; as=script; crossorigin=anonymous, </index.1c5aebde.js>; rel=preload; as=script; crossorigin=anonymous, </index.daf64d39.js>; rel=preload; as=script; crossorigin=anonymous, </r.error.08ca7a60.css>; rel=preload; as=style"
+			"value": "</index.f6c1450e.js>; rel=preload; as=script; crossorigin=anonymous, </index.1c5aebde.js>; rel=preload; as=script; crossorigin=anonymous, </index.daf64d39.js>; rel=preload; as=script; crossorigin=anonymous, </r.error.08ca7a60.css>; rel=preload; as=style, </font.woff2>; rel=preload; as=font; crossorigin=anonymous, </hero.jpg>; rel=preload; as=image"
 		}
 	],
 	"/": [
