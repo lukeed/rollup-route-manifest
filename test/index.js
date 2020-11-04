@@ -391,5 +391,79 @@ publicPath.run();
 
 // ---
 
+const format = suite('format');
+
+format('should customize `Asset` data before write', () => {
+	const output = bundle({
+		format: files => files.map(x => x.href),
+		routes: x => x.includes('/search') && '/search',
+	});
+
+	const contents = parse(output);
+	const routes = Object.keys(contents);
+	assert.equal(routes, ['/search']);
+
+	assert.instance(contents['/search'], Array);
+
+	assert.equal(
+		contents['/search'],
+		EXPECT.FILES['/search'].map(x => x.href)
+	);
+});
+
+format('may produce broken "headers" with `headers: true` option', () => {
+	const output = bundle({
+		headers: true,
+		format: files => files.map(x => x.href),
+		routes: x => x.includes('/search') && '/search',
+	});
+
+	const contents = parse(output);
+	const routes = Object.keys(contents);
+	assert.equal(routes, ['/search']);
+
+	const { files, headers } = contents['/search'];
+	assert.instance(headers, Array);
+	assert.instance(files, Array);
+
+	assert.equal(
+		contents['/search'].files,
+		EXPECT.FILES['/search'].map(x => x.href)
+	);
+
+	assert.match(
+		contents['/search'].headers[0].value,
+		'<undefined>; rel=preload; as=undefined,'
+	);
+});
+
+format('passes modified `Asset[]` list to `headers` function', () => {
+	const output = bundle({
+		format: files => files.map(x => x.href),
+		routes: x => x.includes('/search') && '/search',
+		headers: assets => assets
+	});
+
+	const contents = parse(output);
+	const routes = Object.keys(contents);
+	assert.equal(routes, ['/search']);
+
+	const { files, headers } = contents['/search'];
+	assert.instance(headers, Array);
+	assert.instance(files, Array);
+
+	assert.equal(
+		contents['/search'].files,
+		contents['/search'].headers,
+	);
+
+	assert.equal(
+		contents['/search'].headers,
+		EXPECT.FILES['/search'].map(x => x.href)
+	);
+});
+
+format.run();
+
 // TODO: inline
 // TODO: merge

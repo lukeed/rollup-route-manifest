@@ -24,7 +24,7 @@ function toFunction(val) {
 }
 
 export default function (opts={}) {
-	const { routes, assets, headers, minify, merge, inline } = opts;
+	const { routes, assets, headers, minify, merge, inline, format } = opts;
 	const { filename='rmanifest.json', sort=true, publicPath='/' } = opts;
 
 	if (!routes) {
@@ -33,7 +33,7 @@ export default function (opts={}) {
 
 	const toRoute = toFunction(routes);
 	const toHeaders = toFunction(headers) || headers === true && toLink;
-	// const toFormat = typeof format === 'function' && format;
+	const toFormat = typeof format === 'function' && format;
 	const toType = toFunction(assets) || toAsset;
 
 	return {
@@ -112,12 +112,12 @@ export default function (opts={}) {
 			const routes = Object.keys(Files);
 			if (sort) rsort(routes);
 
-			// if (toFormat) {
-			// 	for (key in Files) {
-			// 		tmp = toFormat(Files[key]);
-			// 		if (tmp) Files[key] = tmp;
-			// 	}
-			// }
+			if (toFormat) {
+				for (key in Files) {
+					tmp = toFormat(Files[key]);
+					if (tmp) Files[key] = tmp;
+				}
+			}
 
 			// No headers? Then stop here
 			if (!toHeaders) {

@@ -22,6 +22,7 @@ declare module 'rollup-route-manifest' {
 		routes: Dict<Pattern> | ((input: string) => Filter<Pattern>);
 		assets?: Dict<string> | ((filepath: string) => Filter<string>);
 		headers?: true | ((files: Asset[], pattern: Pattern, filemap: FileMap) => Header[]);
+		format?: (files: Asset[]) => any;
 		/** @default '/' */
 		publicPath?: string;
 		/** @default false */
