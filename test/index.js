@@ -392,7 +392,7 @@ publicPath.run();
 
 // ---
 
-const format = suite('format');
+const format = suite('options.format');
 
 format('should customize `Asset` data before write', () => {
 	const { emits } = bundle({
@@ -466,5 +466,49 @@ format('passes modified `Asset[]` list to `headers` function', () => {
 
 format.run();
 
-// TODO: inline
+// ---
+
+const inline = suite('options.inline');
+
+inline('should not inline "rmanifest" data by default', () => {
+	const { emits, assets } = bundle({
+		routes: x => x.includes('/search') && '/search',
+	});
+
+	assert.is(emits.length, 1, '~> emits 1 file');
+
+	const entry = assets['index.1c5aebde.js'];
+	assert.is(entry.code, `console.log('ello')`, '~> unchanged');
+	assert.ok(entry.isEntry, '~> unchanged');
+});
+
+inline('should inline "rmanifest" data into main entry', () => {
+	const { emits, assets } = bundle({
+		inline: true,
+		routes: x => x.includes('/search') && '/search',
+		minify: true,
+	});
+
+	// emits 1 file, minified
+	const contents = parse(emits, true);
+
+	const entry = assets['index.1c5aebde.js'];
+	assert.is(entry.code, `window.__rmanifest=${JSON.stringify(contents)};console.log('ello')`);
+});
+
+inline('should only avoid "rmanifest.json" via falsey `filename` option', () => {
+	const { emits, assets } = bundle({
+		inline: true,
+		filename: false,
+		routes: x => x.includes('/search') && '/search',
+	});
+
+	assert.is(emits.length, 0, '~> emits 0 files')
+
+	const entry = assets['index.1c5aebde.js'];
+	assert.ok(entry.code.startsWith(`window.__rmanifest={"`));
+});
+
+inline.run();
+
 // TODO: merge

@@ -1,5 +1,7 @@
 {
   "index.1c5aebde.js": {
+    "isEntry": true,
+    "code": "console.log('ello')",
     "facadeModuleId": "src/index.js",
     "imports": [],
     "referencedFiles": [
