@@ -86,6 +86,15 @@ filename('should be customizable', () => {
 	assert.is(rmanifest.fileName, 'hello.json');
 });
 
+filename('should not emit a file if falsey', () => {
+	const output = bundle({
+		routes: () => false,
+		filename: '',
+	});
+
+	assert.is(output.length, 0, '~> emits 0 files');
+});
+
 filename.run();
 
 // ---

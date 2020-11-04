@@ -27,7 +27,7 @@ declare module 'rollup-route-manifest' {
 		/** @default false */
 		minify?: boolean;
 		/** @default 'rmanifest.json' */
-		filename?: string;
+		filename?: string | false;
 		/** @default false */
 		inline?: boolean;
 		/** @default false */
