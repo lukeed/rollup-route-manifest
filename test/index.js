@@ -297,6 +297,31 @@ headers('should accept custom function', () => {
 	});
 });
 
+headers('should ensure Array if custom function returns nothing', () => {
+	const { emits } = bundle({
+		routes: DEFAULTS.routes,
+		headers: () => false
+	});
+
+	const contents = parse(emits);
+	const routes = Object.keys(contents);
+	assert.equal(routes, ['/error', '/', '/search', '/:slug', '*']);
+
+	const example = contents['/'];
+	assert.equal(Object.keys(example), ['files', 'headers']);
+	assert.instance(example.headers, Array);
+	assert.instance(example.files, Array);
+
+	const expects = combine(EXPECT.FILES,
+		routes.reduce((obj, key) => {
+			obj[key] = [];
+			return obj;
+		}, {})
+	);
+
+	assert.equal(contents, expects);
+});
+
 headers.run();
 
 // ---
